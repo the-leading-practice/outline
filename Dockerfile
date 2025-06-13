@@ -28,7 +28,7 @@ RUN  apt-get update \
 
 # Create a non-root user compatible with Debian and BusyBox based images
 RUN addgroup --gid 1001 nodejs && \
-  adduser --uid 1001 --ingroup nodejs --disabled-password --gecos "" nodejs && \
+  adduser --uid 1001 --ingroup nodejs nodejs && \
   chown -R nodejs:nodejs $APP_PATH/build && \
   mkdir -p /var/lib/outline && \
   chown -R nodejs:nodejs /var/lib/outline
