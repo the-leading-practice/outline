@@ -598,7 +598,7 @@ class Collection extends ParanoidModel<
         where: {
           urlId: match[1],
         },
-        ...options,
+        ...rest,
         rejectOnEmpty: false,
       });
 
@@ -894,8 +894,8 @@ class Collection extends ParanoidModel<
               index !== undefined
                 ? index
                 : options.insertOrder === "prepend"
-                ? 0
-                : childDocument.children.length;
+                  ? 0
+                  : childDocument.children.length;
             childDocument.children.splice(childInsertionIndex, 0, documentJson);
           } else {
             childDocument.children = placeDocument(childDocument.children);
