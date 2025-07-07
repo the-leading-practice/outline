@@ -163,12 +163,21 @@ async function start(_id: number, disconnect: () => void) {
 
   // loop through requested services at startup
   for (const name of env.SERVICES) {
-    if (!Object.keys(services).includes(name)) {
+    // Treat "api" as an alias for "web" since web service includes API routes
+    const serviceName = name === "api" ? "web" : name;
+    
+    if (!Object.keys(services).includes(serviceName)) {
       throw new Error(`Unknown service ${name}`);
     }
 
+    // Skip if web service is already started (avoids duplicate when both "web" and "api" are specified)
+    if (serviceName === "web" && env.SERVICES.includes("web") && name === "api") {
+      Logger.info("lifecycle", `Skipping ${name} service (already included in web service)`);
+      continue;
+    }
+
     Logger.info("lifecycle", `Starting ${name} service`);
-    const init = services[name as keyof typeof services];
+    const init = services[serviceName as keyof typeof services];
     await init(app, server as https.Server, env.SERVICES);
   }
 
